@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 
 const farmDetailsSchema = new mongoose.Schema({
+    name:{
+        type:String,
+        required:true,
+    },
     soilType: {
         type:String,
         enum:['Sandy', 'Clay', 'Silty', 'Loamy', 'Peaty', 'Chalky', 'Saline', 'Laterite', 'Black Cotton Soil', 'Red Soil'],
