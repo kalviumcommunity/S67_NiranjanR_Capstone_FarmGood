@@ -30,7 +30,7 @@ const Login = () => {
             <label htmlFor="password" className='ml-7 block text-xs font-[550] text-gray-700 mb-1'>Password</label>
             <div className="relative w-[15vw] ml-7">
   <input
-    type="text"
+    type={showPassword ? "text" : "password"}
     className="w-full text-xs border-[0.5px] rounded-sm focus:outline-none focus:border-gray-300 pr-8 pl-2 py-1"
     id="password"
   />

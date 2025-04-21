@@ -10,6 +10,10 @@ userRouter.post("/sign-up", async(req,res)=>{
         return res.status(400).json({error: "User already exists"});
       }
     bcrypt.hash(password, 10, async (err, hash)=>{
+        if (err){
+            console.log(err)
+            return res.status(500).json({error:"Internal server error."})
+        }
         await userModel.create({
                 profileName:profileName,
                 email:email,
@@ -25,7 +29,7 @@ userRouter.post('/login',async (req,res)=>{
         const {email, password} = req.body;
     const user = await userModel.findOne({email:email});
     if(!user){
-        return new Error("User not found");
+        return res.status(400).json({error:"User not found"});
     }
     const isMatch=await bcrypt.compare(password, user.password) 
         
