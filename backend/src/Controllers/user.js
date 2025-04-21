@@ -62,4 +62,27 @@ userRouter.get('/get-user',async (req,res)=>{
     }
 })
 
+userRouter.put('/edit-name',async (req,res)=>{
+    const email = req.cookies.email;
+    const {profileName} = req.body;
+    if (!email){
+        return res.status(400).json({message:"Email not found in cookies."})
+    }
+    try
+    {const user = await userModel.findOne({email:email})
+    if (!user){
+        return res.status(400).json({error:"User not found."})
+    }
+    if (!profileName){
+        return res.status(400).json({error:"Provide a Profile Name!"})
+    }
+    user.profileName = profileName;
+    await user.save();
+    return res.status(200).json({message:"User updated",user:user})}
+    catch(err){
+        console.log(err);
+        return res.status(500).json({error:"Internal Server Error"})
+    }
+})
+
 module.exports = userRouter
