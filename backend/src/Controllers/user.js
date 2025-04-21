@@ -37,11 +37,25 @@ userRouter.post('/login',async (req,res)=>{
         return res.status(400).json({ error: "Invalid credentials" });
       }
     res.cookie('email',email,{maxAge:(1000*60*60*24*7)})
-    return res.status(200).json({ message: `Login successful.`});
+    return res.status(200).json({ message: `Login successful.`,email:email});
     }
     catch(err){
         console.error("Login error:", err.message, err.stack);
         return res.status(500).json({ error: "Internal server error" });
+    }
+})
+
+userRouter.get('/get-user',async (req,res)=>{
+    const email = req.cookies.email;
+    if (!email){
+        return res.status(400).json({message:"Email not found in cookies."})
+    }
+    try
+    {const user = await userModel.findOne({email:email})
+    return res.status(200).json({user:user})}
+    catch(err){
+        console.log(err);
+        return res.status(500).json({error:"Internal Server Error"})
     }
 })
 
