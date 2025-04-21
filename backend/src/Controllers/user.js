@@ -52,6 +52,9 @@ userRouter.get('/get-user',async (req,res)=>{
     }
     try
     {const user = await userModel.findOne({email:email})
+    if (!user){
+        return res.status(400).json({error:"User not found."})
+    }
     return res.status(200).json({user:user})}
     catch(err){
         console.log(err);
