@@ -1,5 +1,10 @@
 # FarmGood
 
+### Deployments
+
+- [Backend](https://s67-niranjanr-capstone-farmgood-1.onrender.com)
+- [Frontend](https://charming-profiterole-b14259.netlify.app/)
+
 ### Concept:
 
 Project FarmGood is aimed to favour the educated and modern agriculturists to practice agriculture efficiently. This is done by suggesting to them what they can do with the piece of land that they plan to work on.
