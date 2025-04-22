@@ -41,7 +41,7 @@ userRouter.post('/login',async (req,res)=>{
     if (!isMatch) {
         return res.status(400).json({ error: "Invalid credentials" });
       }
-    const token = jwt.sign({id:user._id},secret)
+    const token = jwt.sign({id:user._id},secret,{expiresIn:'7d'})
     res.cookie('token',`Bearer ${token}`)
     return res.status(200).json({ message: `Login successful.`,email:email});
     }
