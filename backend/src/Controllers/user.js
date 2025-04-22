@@ -1,7 +1,12 @@
 const express = require('express');
 const userRouter = express.Router();
 const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken')
 const userModel = require('./../Models/userModel')
+const auth = require('./../Middleware/auth')
+require('dotenv').config({path:'./../config/.env'})
+
+const secret = process.env.SECRET_KEY
 
 userRouter.post("/sign-up", async(req,res)=>{
     const {profileName, email, password} = req.body;
@@ -36,7 +41,8 @@ userRouter.post('/login',async (req,res)=>{
     if (!isMatch) {
         return res.status(400).json({ error: "Invalid credentials" });
       }
-    res.cookie('email',email,{maxAge:(1000*60*60*24*7)})
+    const token = jwt.sign({id:user._id},secret,{expiresIn:'7d'})
+    res.cookie('token',`Bearer ${token}`)
     return res.status(200).json({ message: `Login successful.`,email:email});
     }
     catch(err){
@@ -45,13 +51,9 @@ userRouter.post('/login',async (req,res)=>{
     }
 })
 
-userRouter.get('/get-user',async (req,res)=>{
-    const email = req.cookies.email;
-    if (!email){
-        return res.status(400).json({message:"Email not found in cookies."})
-    }
+userRouter.get('/get-user',auth,async (req,res)=>{
     try
-    {const user = await userModel.findOne({email:email})
+    {const user = req.user
     if (!user){
         return res.status(400).json({error:"User not found."})
     }
@@ -62,14 +64,11 @@ userRouter.get('/get-user',async (req,res)=>{
     }
 })
 
-userRouter.put('/edit-name',async (req,res)=>{
-    const email = req.cookies.email;
+userRouter.put('/edit-name',auth,async (req,res)=>{
+    const id = req.user._id;
     const {profileName} = req.body;
-    if (!email){
-        return res.status(400).json({message:"Email not found in cookies."})
-    }
     try
-    {const user = await userModel.findOne({email:email})
+    {const user = await userModel.findById(id)
     if (!user){
         return res.status(400).json({error:"User not found."})
     }
